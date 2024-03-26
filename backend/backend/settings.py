@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'users.apps.UsersConfig',
     'api.apps.ApiConfig',
+    'pay2u.apps.Pay2UConfig',
 ]
 
 MIDDLEWARE = [
@@ -152,4 +153,4 @@ REST_FRAMEWORK = {
     ),
 }
 
-AUTH_USER_MODEL = 'users.User'
+AUTH_USER_MODEL = 'users.CustomUser'
