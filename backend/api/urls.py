@@ -5,7 +5,6 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework import permissions
 from rest_framework.routers import DefaultRouter
 
-
 app_name = 'api'
 
 router = DefaultRouter()

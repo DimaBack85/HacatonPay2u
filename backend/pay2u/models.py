@@ -1,35 +1,49 @@
 import uuid
 
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-from django.core.validators import MinValueValidator, MaxValueValidator
 
-from users.models import CustomUser
+from users.models import User
 
 PERCENTAGE_VALIDATOR = [MinValueValidator(0), MaxValueValidator(100)]
 
 
 class Rate(models.Model):
     id = models.UUIDField(
-        primary_key=True, 
-        editable=False, 
-        default=uuid.uuid4, 
+        primary_key=True,
+        editable=False,
+        default=uuid.uuid4,
         unique=True,
     )
     titel = models.IntegerField(
         verbose_name='Тариф',
     )
     price = models.DecimalField(
-        max_digits=6, 
+        max_digits=6,
         decimal_places=2,
         verbose_name='Стоимость'
     )
 
+    class Meta:
+        verbose_name = 'Тариф'
+        verbose_name_plural = 'Тарифы'
+
+    def __str__(self):
+        list_1 = [1]
+        list_2 = [2, 3, 4]
+        if self.titel in list_1:
+            return f'{self.titel} месяц'
+        elif self.titel in list_2:
+            return f'{self.titel} месяца'
+        else:
+            return f'{self.titel} месяцев'
+
 
 class Services(models.Model):
     id = models.UUIDField(
-        primary_key=True, 
-        editable=False, 
-        default=uuid.uuid4, 
+        primary_key=True,
+        editable=False,
+        default=uuid.uuid4,
         unique=True,
     )
     name = models.CharField(
@@ -46,12 +60,19 @@ class Services(models.Model):
         blank=False
     )
 
+    class Meta:
+        verbose_name = 'Сервис'
+        verbose_name_plural = 'Сервисы'
+
+    def __str__(self):
+        return f'{self.name} месяц'
+
 
 class Subscription(models.Model):
     id = models.UUIDField(
-        primary_key=True, 
-        editable=False, 
-        default=uuid.uuid4, 
+        primary_key=True,
+        editable=False,
+        default=uuid.uuid4,
         unique=True,
     )
     service = models.ForeignKey(
@@ -79,40 +100,53 @@ class Subscription(models.Model):
         validators=PERCENTAGE_VALIDATOR
     )
 
+    class Meta:
+        verbose_name = 'Подписка'
+        verbose_name_plural = 'Подписки'
+
+    def __str__(self):
+        return f'{self.name}'
+
 
 class Cashback(models.Model):
     STATUS_CASHBACK = (
-        ('expected','ожидается'),
+        ('expected', 'ожидается'),
         ('accrued', 'начислен'),
     )
 
     id = models.UUIDField(
-        primary_key=True, 
-        editable=False, 
-        default=uuid.uuid4, 
+        primary_key=True,
+        editable=False,
+        default=uuid.uuid4,
         unique=True,
     )
     amount = models.DecimalField(
-        max_digits=6, 
+        max_digits=6,
         decimal_places=2,
         verbose_name='Сумма'
     )
     status = models.CharField(
-        max_length=9, 
-        choices=STATUS_CASHBACK, 
+        max_length=9,
+        choices=STATUS_CASHBACK,
         default='ожидается'
     )
+
+    class Meta:
+        verbose_name = 'Кэшбэк'
+
+    def __str__(self):
+        return self.amount
 
 
 class Payments(models.Model):
     id = models.UUIDField(
-        primary_key=True, 
-        editable=False, 
-        default=uuid.uuid4, 
+        primary_key=True,
+        editable=False,
+        default=uuid.uuid4,
         unique=True,
     )
     amount = models.DecimalField(
-        max_digits=6, 
+        max_digits=6,
         decimal_places=2,
         verbose_name='Сумма',
     )
@@ -121,12 +155,19 @@ class Payments(models.Model):
         verbose_name='Дата платежа',
     )
 
+    class Meta:
+        verbose_name = 'Платёж'
+        verbose_name_plural = 'Платежи'
+
+    def __str__(self):
+        return self.amount
+
 
 class Notification(models.Model):
     id = models.UUIDField(
-        primary_key=True, 
-        editable=False, 
-        default=uuid.uuid4, 
+        primary_key=True,
+        editable=False,
+        default=uuid.uuid4,
         unique=True,
     ),
     text = models.TextField(
@@ -138,12 +179,19 @@ class Notification(models.Model):
         verbose_name='Дата сообщения',
     )
 
+    class Meta:
+        verbose_name = 'Сообщение'
+        verbose_name_plural = 'Сообщения'
+
+    def __str__(self):
+        return self.text
+
 
 class UserSubscription(models.Model):
     STATUS_SUB = (
         ('active', 'активная'),
         ('inactive', 'не активна'),
-    ) 
+    )
 
     subscription = models.ManyToManyField(
         'Subscription',
@@ -151,7 +199,7 @@ class UserSubscription(models.Model):
         related_name='subscription',
     )
     user_id = models.ForeignKey(
-        CustomUser,
+        User,
         on_delete=models.CASCADE,
         verbose_name='Пользователь',
     )
@@ -163,8 +211,8 @@ class UserSubscription(models.Model):
         verbose_name='Дата окончания',
     )
     status = models.CharField(
-        max_length=8, 
-        choices=STATUS_SUB, 
+        max_length=8,
+        choices=STATUS_SUB,
         default='active',
     )
     cashback = models.ForeignKey(
@@ -185,3 +233,7 @@ class UserSubscription(models.Model):
         verbose_name='Сообщения',
         related_name='notification',
     )
+
+    class Meta:
+        verbose_name = 'Ваша подписка'
+        verbose_name_plural = 'Ваши подписки'
