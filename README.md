@@ -1,10 +1,10 @@
-The backend of the project with services and subscriptions. Created to participate in a team hackathon.
+# The backend of the project with services and subscriptions. Created to participate in a team hackathon.
 
-###Эндпойнты:
+## Эндпойнты:
 
-##GET
+### GET
 
-* /api/v1/subscription/list (Список названий всех подписок всех сервисов. Главная страница)
-* /api/v1/subscription/details{subscription_ID} (Конкретная подписка с деталями и подробным описанием)
-* /api/v1/user/notification/list (Список уведомлений пользователя)
-* /api/v1/user/subscription/list (Список всех подписок пользователя)
+* /api/v1/subscription/ (Список названий всех доступных подписок приложения. Главная страница)
+* /api/v1/subscription/details/<int:pk>/ (Конкретная подписка с описанием)
+* /api/v1/user/notification/ (Список уведомлений пользователя)
+* /api/v1/user/subscription/ (Список всех подписок пользователя)
