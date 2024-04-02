@@ -1,4 +1,4 @@
-﻿from rest_framework import serializers
+﻿from rest_framework.serializers import ModelSerializer
 
 from pay2u.models import (
     Cashback,
@@ -11,55 +11,57 @@ from pay2u.models import (
 )
 
 
-class NotificationSeriaizers(serializers.ModelSerializer):
-    class Meta:
-        model = Notification
-        fields = ['text', 'date']
-
-
-class CashbackSeriaizers(serializers.ModelSerializer):
+class CashbackSerializer(ModelSerializer):
     class Meta:
         model = Cashback
-        fields = ['amount', 'status']
+        fields = ('amount', 'status',)
 
 
-class PaymentsSeriaizers(serializers.ModelSerializer):
+class NotificationSerializer(ModelSerializer):
+    class Meta:
+        model = Notification
+        fields = ('text', 'date',)
+
+
+class PaymentsSerializer(ModelSerializer):
     class Meta:
         model = Payments
-        fields = ['amount', 'datetime']
+        fields = ('amount', 'datetime',)
 
 
-class RateSeriaizers(serializers.ModelSerializer):
+class RateSerializer(ModelSerializer):
     class Meta:
         model = Rate
-        fields = ['titel', 'price']
+        fields = ('title', 'price')
 
 
-class ServicesSeriaizers(serializers.ModelSerializer):
+class ServicesSerializer(ModelSerializer):
+
     class Meta:
         model = Services
-        fields = ['name', 'description', 'url']
+        fields = ('name', 'description', 'url',)
 
 
-class SubscriptionSeriaizers(serializers.ModelSerializer):
-    servise = ServicesSeriaizers(many=True)
-    rate = RateSeriaizers(many=True)
+class SubscriptionSerializer(ModelSerializer):
+    service = ServicesSerializer(Many=True)
+    rate = RateSerializer(many=True)
 
     class Meta:
         model = Subscription
-        fields = ['rate', 'servise', 'name', 'description', 'refund']
+        fields = ('service', 'rate', 'name', 'description', 'refund',)
 
 
-class UserSubscriptionSeriaizers(serializers.ModelSerializer):
+class UserSubscriptionSerializer(ModelSerializer):
+
     class Meta:
         model = UserSubscription
-        fields = [
+        fields = (
             'subscription',
-            'user',
-            'date_beginning',
-            'date_ending',
+            'user_id',
+            'date_start',
+            'date_end',
             'status',
             'cashback',
             'payments',
-            'notification'
-        ]
+            'notification',
+        )

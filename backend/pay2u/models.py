@@ -15,7 +15,7 @@ class Rate(models.Model):
         default=uuid.uuid4,
         unique=True,
     )
-    titel = models.IntegerField(
+    title = models.IntegerField(
         verbose_name='Тариф',
     )
     price = models.DecimalField(
@@ -31,15 +31,15 @@ class Rate(models.Model):
     def __str__(self):
         list_1 = [1]
         list_2 = [2, 3, 4]
-        if self.titel in list_1:
-            return f'{self.titel} месяц'
-        elif self.titel in list_2:
-            return f'{self.titel} месяца'
+        if self.title in list_1:
+            return f'{self.title} месяц' # проверить, здесь что-то не так. что ожидается на выходе от строки?
+        elif self.title in list_2:
+            return f'{self.title} месяца'
         else:
-            return f'{self.titel} месяцев'
+            return f'{self.title} месяцев'
 
 
-class Services(models.Model):
+class Services(models.Model): # название модели по идее должно быть в единственном числе
     id = models.UUIDField(
         primary_key=True,
         editable=False,
@@ -65,7 +65,7 @@ class Services(models.Model):
         verbose_name_plural = 'Сервисы'
 
     def __str__(self):
-        return f'{self.name} месяц'
+        return f'{self.name} месяц' # что должна выдавать эта строка?
 
 
 class Subscription(models.Model):
@@ -203,11 +203,11 @@ class UserSubscription(models.Model):
         on_delete=models.CASCADE,
         verbose_name='Пользователь',
     )
-    date_beginning = models.DateTimeField(
+    date_start = models.DateTimeField(
         auto_now_add=True,
         verbose_name='Дата начала',
     )
-    date_ending = models.DateTimeField(
+    date_end = models.DateTimeField(
         verbose_name='Дата окончания',
     )
     status = models.CharField(

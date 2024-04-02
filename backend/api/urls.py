@@ -28,6 +28,8 @@ decorated_logout_view = swagger_auto_schema(
     responses={204: 'Успешно', 401: 'Не авторизированный пользователь'},
 )(views.TokenDestroyView.as_view())
 
+router.register(r'^subscription/details/(?P<subscription_id>\d+)', ..., basename='subscription')
+
 urlpatterns = [
     path('', include(router.urls)),
     path('auth/token/login', decorated_login_view, name='login'),
