@@ -13,7 +13,36 @@ from pay2u.models import (
     Notification,
     UserSubscription
 )
-from serializers import Notification
+from serializers import (
+    Notification,
+    CashbackSerializer,
+    PaymentsSerializer,
+    RateSerializer,
+    ServicesSerializer,
+    SubscriptionSerializer,
+    UserSubscriptionSerializer
+)
+
+
+def user_subscription_list(request):
+    subscriptions = UserSubscription.objects.all()
+    data = {'subscriptions': list(subscriptions.values())}
+    return JsonResponse(data)
+
+
+def user_subscription_detail(request, subscription_id):
+    subscription = UserSubscription.objects.get(id=subscription_id)
+    data = {'subscription': {
+        'id': subscription.id,
+        'user_id': subscription.user_id.id,
+        'date_start': subscription.date_start,
+        'date_end': subscription.date_end,
+        'status': subscription.status,
+        'cashback_amount': subscription.cashback.amount,
+        'payments_amount': subscription.payments.amount,
+        'notification_text': subscription.notification.text
+    }}
+    return JsonResponse(data)
 
 
 class NotificationViewSet(mixins.ListModelMixin,
@@ -25,6 +54,9 @@ class NotificationViewSet(mixins.ListModelMixin,
     permission_classes = (permissions.IsAuthenticated,)
 
 
+class SubscriptionViewSet(mixins.ListModelMixin):
+    queryset = Subscription.objects.all()
+    permissions_classes  = ()
 def get_subscription_list(request):
     subscriptions = Subscription.objects.all()
     subscription_list = []

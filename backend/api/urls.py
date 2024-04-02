@@ -5,6 +5,9 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework import permissions
 from rest_framework.routers import DefaultRouter
 
+#from .views import user_subscription_list, user_subscription_detail
+
+
 app_name = 'api'
 
 router = DefaultRouter()
@@ -35,3 +38,8 @@ urlpatterns = [
     path('auth/token/login', decorated_login_view, name='login'),
     path('auth/token/logout', decorated_logout_view, name='logout')
 ]
+
+# urlpatterns = [
+#     path('user_subscriptions/', user_subscription_list, name='user_subscription_list'),
+#     path('user_subscriptions/<uuid:subscription_id>/', user_subscription_detail, name='user_subscription_detail'),
+#]
