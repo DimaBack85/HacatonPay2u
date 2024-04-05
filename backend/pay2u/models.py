@@ -32,14 +32,14 @@ class Rate(models.Model):
         list_1 = [1]
         list_2 = [2, 3, 4]
         if self.title in list_1:
-            return f'{self.title} месяц' # проверить, здесь что-то не так. что ожидается на выходе от строки?
+            return f'{self.title} месяц'  # проверить, здесь что-то не так. что ожидается на выходе от строки?
         elif self.title in list_2:
             return f'{self.title} месяца'
         else:
             return f'{self.title} месяцев'
 
 
-class Services(models.Model): # название модели по идее должно быть в единственном числе
+class Services(models.Model):  # название модели по идее должно быть в единственном числе
     id = models.UUIDField(
         primary_key=True,
         editable=False,
@@ -65,7 +65,7 @@ class Services(models.Model): # название модели по идее до
         verbose_name_plural = 'Сервисы'
 
     def __str__(self):
-        return f'{self.name} месяц' # что должна выдавать эта строка?
+        return f'{self.name} месяц'  # что должна выдавать эта строка?
 
 
 class Subscription(models.Model):
@@ -77,6 +77,7 @@ class Subscription(models.Model):
     )
     service = models.ForeignKey(
         'Services',
+        related_name='subscriptions',
         verbose_name='Сервис',
         on_delete=models.CASCADE,
     )
@@ -132,7 +133,7 @@ class Cashback(models.Model):
     )
 
     class Meta:
-        verbose_name = 'Кэшбэк'
+        verbose_name = 'Кешбэк'
 
     def __str__(self):
         return self.amount

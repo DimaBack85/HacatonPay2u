@@ -1,7 +1,8 @@
 from rest_framework import mixins, permissions, status, viewsets
-from rest_framework.decorators import action
-from rest_framework.generics import get_object_or_404
+from rest_framework.decorators import action, api_view
+from rest_framework.generics import get_object_or_404, ListAPIView, RetrieveAPIView
 from rest_framework.response import Response
+from rest_framework.viewsets import ReadOnlyModelViewSet
 from django.http import JsonResponse
 
 from pay2u.models import (
@@ -14,7 +15,7 @@ from pay2u.models import (
     UserSubscription
 )
 from serializers import (
-    Notification,
+    NotificationSerializer,
     CashbackSerializer,
     PaymentsSerializer,
     RateSerializer,
@@ -22,6 +23,68 @@ from serializers import (
     SubscriptionSerializer,
     UserSubscriptionSerializer
 )
+
+
+class SubscriptionViewSet(ReadOnlyModelViewSet): # /api/v1/subscription/
+    queryset = Subscription.objects.all()        # /api/v1/subscription/\<int:pk\>/
+    serializer_class = SubscriptionSerializer
+
+
+class ServicesViewSet(ReadOnlyModelViewSet): # /api/v1/services/
+    queryset = Services.objects.all()
+    serializer_class = ServicesSerializer
+
+
+class ServicesSubscriptionViewSet(ReadOnlyModelViewSet):  # /api/v1/services/{service_id}/subscription/
+    serializer_class = SubscriptionSerializer
+
+    def get_queryset(self):
+        # Получаем id сервиса из эндпоинта
+        service_id = self.kwargs.get("service_id")
+        # И отбираем только нужные подписки
+        new_queryset = Subscription.objects.filter(services=service_id)
+        return new_queryset
+
+
+# var 2
+# class SubscriptionList(ListAPIView):
+#     queryset = Subscription.objects.all()
+#     serializer_class = SubscriptionSerializer
+#
+#
+# class SubscriptionDetail(RetrieveAPIView):
+#     queryset = Subscription.objects.all()
+#     serializer_class = SubscriptionSerializer
+
+
+# var 1
+# @api_view(['GET'])
+# def subscription(request):
+#     queryset = Subscription.objects.all()
+#     serializer = SubscriptionSerializer(queryset, many=True)
+#     return Response(serializer.data)
+
+
+# @api_view(['GET'])
+# def subscription_detail(request, pk=None):
+#     queryset = Subscription.objects.all()
+#     subscription = get_object_or_404(queryset, pk=pk)
+#     serializer = SubscriptionSerializer(subscription)
+#     return Response(serializer.data)
+
+
+# @api_view(['GET'])
+# def notification(request):
+#     queryset = Notification.objects.filter(user=request.user)
+#     serializer = NotificationSerializer(queryset, many=True)
+#     return Response(serializer.data)
+
+
+class UserSubscriptionViewSet(viewsets.ViewSet):
+    def list(self, request):
+        subscriptions = request.user.subscriptions.all()
+        serializer = SubscriptionSerializer(subscriptions, many=True)
+        return Response(serializer.data)
 
 
 def user_subscription_list(request):

@@ -1,4 +1,4 @@
-﻿from rest_framework.serializers import ModelSerializer
+﻿from rest_framework.serializers import ModelSerializer, StringRelatedField
 
 from pay2u.models import (
     Cashback,
@@ -35,20 +35,20 @@ class RateSerializer(ModelSerializer):
         fields = ('title', 'price')
 
 
-class ServicesSerializer(ModelSerializer):
-
-    class Meta:
-        model = Services
-        fields = ('name', 'description', 'url',)
-
-
 class SubscriptionSerializer(ModelSerializer):
-    service = ServicesSerializer(Many=True)
-    rate = RateSerializer(many=True)
+    service = StringRelatedField(read_only=True)
 
     class Meta:
         model = Subscription
         fields = ('service', 'rate', 'name', 'description', 'refund',)
+
+
+class ServicesSerializer(ModelSerializer):
+    subscriptions = SubscriptionSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Services
+        fields = ('name', 'description', 'url', 'subscriptions',)
 
 
 class UserSubscriptionSerializer(ModelSerializer):

@@ -5,7 +5,7 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework import permissions
 from rest_framework.routers import DefaultRouter
 
-#from .views import user_subscription_list, user_subscription_detail
+from .views import SubscriptionViewSet, ServicesViewSet
 
 
 app_name = 'api'
@@ -31,7 +31,9 @@ decorated_logout_view = swagger_auto_schema(
     responses={204: 'Успешно', 401: 'Не авторизированный пользователь'},
 )(views.TokenDestroyView.as_view())
 
-router.register(r'^subscription/details/(?P<subscription_id>\d+)', ..., basename='subscription')
+router.register('subscription', SubscriptionViewSet, basename='subscription')
+router.register('services', ServicesViewSet, 'services')
+
 
 urlpatterns = [
     path('', include(router.urls)),
